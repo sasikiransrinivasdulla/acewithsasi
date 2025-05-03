@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE Syllabus Tracker | Dark Edition</title>
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --bg-panel: #121212;
+            --accent-red: #ff0033;
+            --accent-glow: 0 0 10px rgba(255, 0, 51, 0.7);
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-tertiary: #808080;
+            --border-dark: #1a1a1a;
+            --border-light: #333333;
+            --success-glow: 0 0 10px rgba(0, 255, 85, 0.5);
+            --unit-gradient: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 0, 51, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 0, 51, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-dark);
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: var(--accent-red);
+            box-shadow: var(--accent-glow);
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .glow-text {
+            text-shadow: 0 0 8px var(--accent-red);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--bg-panel);
+            border-radius: 10px;
+            margin: 2rem 0;
+            height: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--accent-red) 0%, #ff3366 100%);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+            box-shadow: var(--accent-glow);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .search-box {
+            display: flex;
+            margin: 2rem 0;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent-red);
+            box-shadow: var(--accent-glow);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-btn {
+            padding: 0 1.5rem;
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background: #ff1a4d;
+        }
+
+        .units-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .unit {
+            background: var(--unit-gradient);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-dark);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .unit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4), var(--accent-glow);
+        }
+
+        .unit-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(18, 18, 18, 0.9);
+        }
+
+        .unit-header:hover {
+            background: rgba(30, 30, 30, 0.9);
+        }
+
+        .unit-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .unit-title::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            box-shadow: var(--accent-glow);
+        }
+
+        .lecture-count {
+            background: var(--bg-darker);
+            color: var(--accent-red);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--accent-red);
+            box-shadow: var(--accent-glow);
+        }
+
+        .unit-content {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .unit.active .unit-content {
+            max-height: 2000px;
+            padding-bottom: 1.5rem;
+        }
+
+        .topics-list {
+            list-style-type: none;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--bg-panel);
+            border-radius: 8px;
+            border: 1px solid var(--border-dark);
+            transition: all 0.3s ease;
+        }
+
+        .topic-item:hover {
+            border-color: var(--accent-red);
+            transform: translateX(5px);
+        }
+
+        .topic-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 4px;
+            margin-right: 1rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .topic-checkbox:checked {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: var(--accent-glow);
+        }
+
+        .topic-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 0.8rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .topic-text {
+            flex-grow: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+
+        .topic-text:hover {
+            color: var(--accent-red);
+        }
+
+        .topic-text.completed {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            background: #ff1a4d;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 51, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 51, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 51, 0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .unit-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .lecture-count {
+                align-self: flex-start;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-red);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff1a4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SOFTWARE ENGINEERING <span >SYLLABUS</span></h1>
+            <p class="subtitle">Track your progress at atmost Privacy...</p>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-stats">
+            <span id="completedCount">0</span> completed
+            <span id="totalCount">0</span> total topics
+            <span id="progressPercent">0%</span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" class="search-input" id="globalSearch" placeholder="Search across all topics...">
+            <button class="search-btn" id="searchBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                Search
+            </button>
+        </div>
+
+        <div class="units-container" id="syllabusContainer">
+            <!-- Units will be inserted here by JavaScript -->
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary pulse" id="saveBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Save Progress
+            </button>
+            <button class="btn btn-outline" id="resetBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <polyline points="23 20 23 14 17 14"></polyline>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                </svg>
+                Reset All
+            </button>
+            <button class="btn btn-outline" id="expandAllBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+                Expand All
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Syllabus data for Software Engineering
+            const syllabus = [
+                {
+                    title: "UNIT I: Introduction",
+                    lectures: 0,
+                    topics: [
+                        "Evolution",
+                        "Software development projects",
+                        "Exploratory style of software developments",
+                        "Emergence of software engineering",
+                        "Notable changes in software development practices",
+                        "Computer system engineering",
+                        "Software Life Cycle Models: Basic concepts",
+                        "Waterfall model and its extensions",
+                        "Rapid application development",
+                        "Agile development model",
+                        "Spiral model"
+                    ]
+                },
+                {
+                    title: "UNIT II: Software Project Management",
+                    lectures: 0,
+                    topics: [
+                        "Software project management complexities",
+                        "Responsibilities of a software project manager",
+                        "Metrics for project size estimation",
+                        "Project estimation techniques",
+                        "Empirical Estimation techniques",
+                        "COCOMO",
+                        "Halstead's software science",
+                        "Risk management",
+                        "Requirements gathering and analysis",
+                        "Software Requirements Specification (SRS)",
+                        "Formal system specification",
+                        "Axiomatic specification",
+                        "Algebraic specification",
+                        "Executable specification and 4GL"
+                    ]
+                },
+                {
+                    title: "UNIT III: Software Design",
+                    lectures: 0,
+                    topics: [
+                        "Overview of the design process",
+                        "How to characterize a good software design?",
+                        "Layered arrangement of modules",
+                        "Cohesion and Coupling",
+                        "Approaches to software design",
+                        "Agility and the Cost of Change",
+                        "Agile Process",
+                        "Extreme Programming (XP)",
+                        "Other Agile Process Models",
+                        "Tool Set for the Agile Process",
+                        "Overview of SA/SD methodology",
+                        "Structured analysis",
+                        "Developing the DFD model of a system",
+                        "Structured design",
+                        "Detailed design",
+                        "Design Review",
+                        "Characteristics of a good user interface",
+                        "Basic concepts",
+                        "Types of user interfaces",
+                        "Fundamentals of component-based GUI development",
+                        "User interface design methodology"
+                    ]
+                },
+                {
+                    title: "UNIT IV: Coding And Testing",
+                    lectures: 0,
+                    topics: [
+                        "Coding",
+                        "Code review",
+                        "Software documentation",
+                        "Testing",
+                        "Black-box testing",
+                        "White-Box testing",
+                        "Debugging",
+                        "Program analysis tools",
+                        "Integration testing",
+                        "Testing object-oriented programs",
+                        "Smoke testing",
+                        "Some general issues associated with testing",
+                        "Software reliability",
+                        "Statistical testing",
+                        "Software quality",
+                        "Software quality management system",
+                        "ISO 9000",
+                        "SEI Capability maturity model",
+                        "Few other important quality standards",
+                        "Six Sigma"
+                    ]
+                },
+                {
+                    title: "UNIT V: Computer-Aided Software Engineering (Case)",
+                    lectures: 0,
+                    topics: [
+                        "CASE and its scope",
+                        "CASE environment",
+                        "CASE support in the software life cycle",
+                        "Other characteristics of CASE tools",
+                        "Towards second generation CASE Tool",
+                        "Architecture of a CASE Environment",
+                        "Characteristics of software maintenance",
+                        "Software reverse engineering",
+                        "Software maintenance process models",
+                        "Estimation of maintenance cost",
+                        "Software reuse: reuse- definition, introduction",
+                        "Reason behind no reuse so far",
+                        "Basic issues in any reuse program",
+                        "A reuse approach",
+                        "Reuse at organization level"
+                    ]
+                }
+            ];
+
+            const syllabusContainer = document.getElementById('syllabusContainer');
+            const progressBar = document.getElementById('progressBar');
+            const completedCount = document.getElementById('completedCount');
+            const totalCount = document.getElementById('totalCount');
+            const progressPercent = document.getElementById('progressPercent');
+            const saveBtn = document.getElementById('saveBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const expandAllBtn = document.getElementById('expandAllBtn');
+            const globalSearch = document.getElementById('globalSearch');
+            const searchBtn = document.getElementById('searchBtn');
+
+            // Load saved progress from localStorage
+            let completedTopics = JSON.parse(localStorage.getItem('seCompletedTopics')) || {};
+
+            // Render the syllabus
+            function renderSyllabus() {
+                syllabusContainer.innerHTML = '';
+                
+                // Calculate total topics for counter
+                let totalTopics = 0;
+                syllabus.forEach(unit => totalTopics += unit.topics.length);
+                totalCount.textContent = totalTopics;
+                
+                syllabus.forEach((unit, unitIndex) => {
+                    const unitElement = document.createElement('div');
+                    unitElement.className = 'unit';
+                    unitElement.innerHTML = `
+                        <div class="unit-header">
+                            <div class="unit-title">${unit.title}</div>
+                            ${unit.lectures ? `<div class="lecture-count">Lectures: ${unit.lectures}</div>` : ''}
+                        </div>
+                        <div class="unit-content">
+                            <ul class="topics-list" id="unit-${unitIndex}"></ul>
+                        </div>
+                    `;
+                    
+                    const topicsList = unitElement.querySelector(`.topics-list`);
+                    
+                    unit.topics.forEach((topic, topicIndex) => {
+                        const topicId = `unit-${unitIndex}-topic-${topicIndex}`;
+                        const isCompleted = completedTopics[topicId] || false;
+                        
+                        const topicItem = document.createElement('li');
+                        topicItem.className = 'topic-item';
+                        topicItem.innerHTML = `
+                            <input type="checkbox" class="topic-checkbox" id="${topicId}" ${isCompleted ? 'checked' : ''}>
+                            <span class="topic-text ${isCompleted ? 'completed' : ''}">${topic}</span>
+                        `;
+                        
+                        topicsList.appendChild(topicItem);
+                        
+                        // Add event listeners
+                        const checkbox = topicItem.querySelector('.topic-checkbox');
+                        const topicText = topicItem.querySelector('.topic-text');
+                        
+                        checkbox.addEventListener('change', function() {
+                            completedTopics[topicId] = this.checked;
+                            topicText.classList.toggle('completed', this.checked);
+                            updateProgress();
+                            saveProgress();
+                        });
+                        
+                        topicText.addEventListener('click', function() {
+                            searchYouTube(topic);
+                        });
+                    });
+                    
+                    // Add click event to unit header to toggle content
+                    const unitHeader = unitElement.querySelector('.unit-header');
+                    unitHeader.addEventListener('click', function() {
+                        unitElement.classList.toggle('active');
+                    });
+                    
+                    syllabusContainer.appendChild(unitElement);
+                });
+                
+                updateProgress();
+            }
+
+            // Update progress bar and counters
+            function updateProgress() {
+                let totalTopics = 0;
+                let completed = 0;
+                
+                syllabus.forEach((unit, unitIndex) => {
+                    unit.topics.forEach((topic, topicIndex) => {
+                        totalTopics++;
+                        const topicId = `unit-${unitIndex}-topic-${topicIndex}`;
+                        if (completedTopics[topicId]) {
+                            completed++;
+                        }
+                    });
+                });
+                
+                const percentage = totalTopics > 0 ? Math.round((completed / totalTopics) * 100) : 0;
+                progressBar.style.width = `${percentage}%`;
+                completedCount.textContent = completed;
+                progressPercent.textContent = `${percentage}%`;
+                
+                // Update pulse animation on save button when progress is made
+                if (completed > 0) {
+                    saveBtn.classList.add('pulse');
+                } else {
+                    saveBtn.classList.remove('pulse');
+                }
+            }
+
+            // Save progress to localStorage
+            function saveProgress() {
+                localStorage.setItem('seCompletedTopics', JSON.stringify(completedTopics));
+                
+                // Visual feedback
+                saveBtn.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Saved!
+                `;
+                setTimeout(() => {
+                    saveBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                            <polyline points="7 3 7 8 15 8"></polyline>
+                        </svg>
+                        Save Progress
+                    `;
+                }, 2000);
+            }
+
+            // Reset all progress
+            function resetProgress() {
+                if (confirm('Are you sure you want to reset all your progress?')) {
+                    completedTopics = {};
+                    saveProgress();
+                    renderSyllabus();
+                }
+            }
+
+            // Expand all units
+            function expandAll() {
+                const units = document.querySelectorAll('.unit');
+                const isExpanded = units[0]?.classList.contains('active');
+                
+                units.forEach(unit => {
+                    if (isExpanded) {
+                        unit.classList.remove('active');
+                        expandAllBtn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <polyline points="9 21 3 21 3 15"></polyline>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                            </svg>
+                            Expand All
+                        `;
+                    } else {
+                        unit.classList.add('active');
+                        expandAllBtn.innerHTML = `
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 15 3 9 9 9"></polyline>
+                                <polyline points="15 9 21 9 21 15"></polyline>
+                                <line x1="3" y1="9" x2="10" y2="16"></line>
+                                <line x1="21" y1="9" x2="14" y2="16"></line>
+                            </svg>
+                            Collapse All
+                        `;
+                    }
+                });
+            }
+
+            // Search YouTube for a topic
+            function searchYouTube(query) {
+                const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + ' Software Engineering')}`;
+                window.open(searchUrl, '_blank');
+            }
+
+            // Global search function
+            function performGlobalSearch() {
+                const query = globalSearch.value.trim().toLowerCase();
+                if (!query) return;
+                
+                let found = false;
+                const units = document.querySelectorAll('.unit');
+                
+                // First expand all units for search
+                units.forEach(unit => unit.classList.add('active'));
+                
+                syllabus.forEach((unit, unitIndex) => {
+                    unit.topics.forEach((topic, topicIndex) => {
+                        const topicElement = document.querySelector(`#unit-${unitIndex} .topic-item:nth-child(${topicIndex + 1}) .topic-text`);
+                        if (topic.toLowerCase().includes(query)) {
+                            topicElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            topicElement.style.color = 'var(--accent-red)';
+                            topicElement.style.fontWeight = '600';
+                            setTimeout(() => {
+                                topicElement.style.color = '';
+                                topicElement.style.fontWeight = '';
+                            }, 3000);
+                            found = true;
+                        }
+                    });
+                });
+                
+                if (!found) {
+                    alert('No matching topics found.');
+                }
+            }
+
+            // Event listeners
+            saveBtn.addEventListener('click', saveProgress);
+            resetBtn.addEventListener('click', resetProgress);
+            expandAllBtn.addEventListener('click', expandAll);
+            searchBtn.addEventListener('click', performGlobalSearch);
+            globalSearch.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performGlobalSearch();
+                }
+            });
+
+            // Initial render
+            renderSyllabus();
+        });
+    </script>
+</body>
+</html>
