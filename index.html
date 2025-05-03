@@ -399,7 +399,8 @@
         <header>
             <h1>SOFTWARE ENGINEERING <span >SYLLABUS</span></h1>
             <p class="subtitle">Track your progress at atmost Privacy...</p>
-        </header>
+            <p class="subtitle">-- Click on Topic Name to reach YT</p>
+        </header>   
 
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
@@ -750,30 +751,42 @@
             }
 
             // Global search function
+            // Global search function
             function performGlobalSearch() {
                 const query = globalSearch.value.trim().toLowerCase();
                 if (!query) return;
                 
                 let found = false;
-                const units = document.querySelectorAll('.unit');
                 
-                // First expand all units for search
-                units.forEach(unit => unit.classList.add('active'));
+                // Reset all highlights first
+                document.querySelectorAll('.topic-text').forEach(el => {
+                    el.style.color = '';
+                    el.style.fontWeight = '';
+                });
                 
                 syllabus.forEach((unit, unitIndex) => {
+                    const unitElement = document.querySelectorAll('.unit')[unitIndex];
+                    let unitHasMatch = false;
+                    
                     unit.topics.forEach((topic, topicIndex) => {
                         const topicElement = document.querySelector(`#unit-${unitIndex} .topic-item:nth-child(${topicIndex + 1}) .topic-text`);
                         if (topic.toLowerCase().includes(query)) {
-                            topicElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Expand only this unit
+                            unitElement.classList.add('active');
+                            // Highlight the matching topic
                             topicElement.style.color = 'var(--accent-red)';
                             topicElement.style.fontWeight = '600';
-                            setTimeout(() => {
-                                topicElement.style.color = '';
-                                topicElement.style.fontWeight = '';
-                            }, 3000);
+                            // Scroll to this topic
+                            topicElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             found = true;
+                            unitHasMatch = true;
                         }
                     });
+                    
+                    // If no matches in this unit, ensure it's collapsed
+                    if (!unitHasMatch) {
+                        unitElement.classList.remove('active');
+                    }
                 });
                 
                 if (!found) {
